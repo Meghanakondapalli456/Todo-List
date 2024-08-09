@@ -15,6 +15,15 @@ function Todo()
    const[newDescription,setNewDescription]=useState("");
    const[completedTodos,setCompletedTodos]=useState([])
    
+   const fetchData =() => {
+    return { allTodos,completedTodos};
+   }
+
+   const handleFetchData = () =>{
+    const data = fetchData();
+    alert(JSON.stringify(data,null,2));
+   }
+
    const handleDeleteTodo = (index) =>  {
     let reducedTodo = [...allTodos];
     reducedTodo.splice(index,1);
@@ -43,11 +52,10 @@ localStorage.setItem('todolist', JSON.stringify(reducedTodo));
      }
     
    useEffect(()=>{
-    let savedTodo= JSON.parse(localStorage.getItem('todolist'));
-    if(savedTodo){
-      setTodos(savedTodo);
-     }
-   },[])
+    fetch('https://jsonplaceholder.typicode.com/todos')
+       .then(response => response.json())
+        .then(json => console.log(json))
+     }, []);
    
    const handleAddTodo=()=>{
     let newTodoItem = {
@@ -84,6 +92,7 @@ localStorage.setItem('todolist', JSON.stringify(reducedTodo));
       <div className=" button-area">
         <button className={`secondaryBtn ${iscompletescreen === false && 'active'}`}onClick={()=>setIscompletescreen(false)}>Todo</button>
         <button className={` secondaryBtn ${iscompletescreen === true && 'active'}`}onClick={()=>setIscompletescreen(true)}>Completed</button>
+        <button  className= "data-button" onClick={handleFetchData}>Data</button>
       </div>
       
       
@@ -111,4 +120,5 @@ localStorage.setItem('todolist', JSON.stringify(reducedTodo));
   );
 }
 export default Todo;
+
 
